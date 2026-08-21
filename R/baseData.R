@@ -27,8 +27,8 @@ baseData_sync <- function(dms_token,erp_token,FStartDate,FEndDate) {
 
 
   sql_lp_id=  paste0("select id,updated_at from  t_customer_customers
-where FROM_UNIXTIME(updated_at) >='",FStartDate,"'
-and  FROM_UNIXTIME(updated_at)<='",FEndDate,"'
+where cast(FROM_UNIXTIME(updated_at) as date) >='",FStartDate,"'
+and   cast(FROM_UNIXTIME(updated_at) as date)<='",FEndDate,"'
         ")
   data_lp_id =  tsda::mysql_select2(token = LP_token,sql  = sql_lp_id)
 

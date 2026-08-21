@@ -26,8 +26,8 @@ salOrder_sync <- function(dms_token,erp_token,FStartDate,FEndDate) {
   print("清空表数据")
 
   sql_lp_id=  paste0("select id,updated_at from  t_order_orders
-where FROM_UNIXTIME(updated_at) >='",FStartDate,"'
-and  FROM_UNIXTIME(updated_at)<='",FEndDate,"'
+where cast(FROM_UNIXTIME(updated_at) as date) >='",FStartDate,"'
+and  cast(FROM_UNIXTIME(updated_at) as date)<='",FEndDate,"'
         ")
   data_lp_id =  tsda::mysql_select2(token = LP_token,sql  = sql_lp_id)
 
@@ -391,7 +391,7 @@ WHERE order_id NOT IN (SELECT id FROM rds_src_lp_order_id_update);")
   #清空id表
 
   sql_df_truncate =paste0("truncate table rds_src_lp_order_id_update")
-  tes = tsda::mysql_delete2(token =DF_token ,sql_str = sql_df_truncate)
+  res = tsda::mysql_delete2(token =DF_token ,sql_str = sql_df_truncate)
 
   print("清空表数据")
 
