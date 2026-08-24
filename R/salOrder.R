@@ -121,7 +121,7 @@ salOrder_view <- function(dms_token,FStartDate,FEndDate) {
 
 
 
-  sql2=paste0("truncate table rds_oms_lpro_src_t_sal_saleorder")
+  sql2=paste0("truncate table rds_oms_lpro_src_t_sal_saleorderentry")
   tsda::mysql_delete2(token =dms_token ,sql_str =sql2)
 
 
