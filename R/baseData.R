@@ -76,24 +76,36 @@ WHERE id NOT IN (SELECT id FROM rds_src_lp_customer_id_update);")
 
   data_df_id_view = tsda::mysql_select2(token = DF_token,sql = sql_df_id_view)
 
-  #查询id对应的linkpro中的数据
 
-  id_list <- paste(data_df_id_view$id, collapse = ",")
-  sql_lp_customer <- paste0("SELECT * FROM t_customer_customers where id in (", id_list, ")")
-
-
-
-  data_lp_customer = tsda::mysql_select2(token =LP_token ,sql = sql_lp_customer)
-
-  data_lp_customer = as.data.frame(data_lp_customer)
-  data_lp_customer = tsdo::na_standard(data_lp_customer)
+  count = nrow(data_df_id_view)
+  print(count)
 
 
 
-  res =tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_customer_customers',r_object = data_lp_customer,append = TRUE)
+  if(count==0){
+
+    res = print(paste0("表t_customer_customers同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+  }else{
+
+    #查询id对应的linkpro中的数据
+
+    id_list <- paste(data_df_id_view$id, collapse = ",")
+    sql_lp_customer <- paste0("SELECT * FROM t_customer_customers where id in (", id_list, ")")
+
+    data_lp_customer = tsda::mysql_select2(token =LP_token ,sql = sql_lp_customer)
+
+    data_lp_customer = as.data.frame(data_lp_customer)
+    data_lp_customer = tsdo::na_standard(data_lp_customer)
+    res =tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_customer_customers',r_object = data_lp_customer,append = TRUE)
+
+    print(paste0("表t_customer_customers同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
 
 
-  print(paste0("表t_customer_customers同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+  }
+
+
 
 
 

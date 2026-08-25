@@ -76,24 +76,41 @@ WHERE id NOT IN (SELECT id FROM rds_src_lp_order_id_update);")
 
   data_df_id_view = tsda::mysql_select2(token = DF_token,sql = sql_df_id_view)
 
-  #查询id对应的linkpro中的数据
 
-  id_list <- paste(data_df_id_view$id, collapse = ",")
-  sql_lp_order <- paste0("SELECT * FROM t_order_orders where id in (", id_list, ")")
+  #查看该更新日期内行数
+  count =nrow(data_df_id_view)
+  print(count)
+
+  if(count==0){
+
+    res=print(paste0("表t_order_orders同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+  }else{
+
+    #查询id对应的linkpro中的数据
+
+    id_list <- paste(data_df_id_view$id, collapse = ",")
+    sql_lp_order <- paste0("SELECT * FROM t_order_orders where id in (", id_list, ")")
 
 
 
-  data_lp_order = tsda::mysql_select2(token =LP_token ,sql = sql_lp_order)
+    data_lp_order = tsda::mysql_select2(token =LP_token ,sql = sql_lp_order)
 
-  data_lp_order = as.data.frame(data_lp_order)
-  data_lp_order = tsdo::na_standard(data_lp_order)
-
-
-
-  res =tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_order_orders',r_object = data_lp_order,append = TRUE)
+    data_lp_order = as.data.frame(data_lp_order)
+    data_lp_order = tsdo::na_standard(data_lp_order)
 
 
-  print(paste0("表t_order_orders同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+    res =tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_order_orders',r_object = data_lp_order,append = TRUE)
+
+
+    print(paste0("表t_order_orders同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+
+
+  }
+
+
 
 
 
@@ -260,26 +277,46 @@ WHERE order_id NOT IN (SELECT id FROM rds_src_lp_order_id_update);")
 
   data_df_id_view = tsda::mysql_select2(token = DF_token,sql = sql_df_id_view)
 
-  #查询id对应的linkpro中的数据
 
-  id_list <- paste(data_df_id_view$id, collapse = ",")
-  sql_lp_order <- paste0("select  distinct id,	order_id,	customer_address_id,name,	phone,	telphone,email,	country_id,	province_id,city,	area,
+  count=nrow(data_df_id_view)
+
+  print(count)
+
+
+  if(count==0){
+
+
+    res=print(paste0("表t_order_orders_address同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+  }else{
+
+
+    #查询id对应的linkpro中的数据
+
+    id_list <- paste(data_df_id_view$id, collapse = ",")
+    sql_lp_order <- paste0("select  distinct id,	order_id,	customer_address_id,name,	phone,	telphone,email,	country_id,	province_id,city,	area,
 address	,complete_address,	zip,language,	company_name from t_order_orders_address
  where    order_id in (", id_list, ")")
 
 
 
-  data_lp_order = tsda::mysql_select2(token =LP_token ,sql = sql_lp_order)
+    data_lp_order = tsda::mysql_select2(token =LP_token ,sql = sql_lp_order)
 
-  data_lp_order = as.data.frame(data_lp_order)
-  data_lp_order = tsdo::na_standard(data_lp_order)
-
-
-
-  res =tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_order_orders_address',r_object = data_lp_order,append = TRUE)
+    data_lp_order = as.data.frame(data_lp_order)
+    data_lp_order = tsdo::na_standard(data_lp_order)
 
 
-  print(paste0("表t_order_orders_address同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+    res =tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_order_orders_address',r_object = data_lp_order,append = TRUE)
+
+
+    print(paste0("表t_order_orders_address同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+
+  }
+
+
+
+
 
   return(res)
 
@@ -370,34 +407,31 @@ WHERE order_id NOT IN (SELECT id FROM rds_src_lp_order_id_update);")
 
   data_df_id_view = tsda::mysql_select2(token = DF_token,sql = sql_df_id_view)
 
-  #查询id对应的linkpro中的数据
 
-  id_list <- paste(data_df_id_view$id, collapse = ",")
-  sql_lp_order <- paste0("select * from t_order_orders_items  where    order_id in (", id_list, ")")
+  count = nrow(data_df_id_view)
+  print(count)
 
+  if(count==0){
 
+    res = print(paste0("表t_order_orders_items同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
 
-  data_lp_order = tsda::mysql_select2(token =LP_token ,sql = sql_lp_order)
-
-  data_lp_order = as.data.frame(data_lp_order)
-  data_lp_order = tsdo::na_standard(data_lp_order)
+  }else{
 
 
+    #查询id对应的linkpro中的数据
 
-  tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_order_orders_items',r_object = data_lp_order,append = TRUE)
+    id_list <- paste(data_df_id_view$id, collapse = ",")
+    sql_lp_order <- paste0("select * from t_order_orders_items  where    order_id in (", id_list, ")")
+    data_lp_order = tsda::mysql_select2(token =LP_token ,sql = sql_lp_order)
 
-  print(paste0("表t_order_orders_items同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
+    data_lp_order = as.data.frame(data_lp_order)
+    data_lp_order = tsdo::na_standard(data_lp_order)
+    res = tsda::mysql_writeTable2(token = DF_token,table_name = 'rds_oms_lpro_src_t_order_orders_items',r_object = data_lp_order,append = TRUE)
 
-  #清空id表
-
-  sql_df_truncate =paste0("truncate table rds_src_lp_order_id_update")
-  res = tsda::mysql_delete2(token =DF_token ,sql_str = sql_df_truncate)
-
-  print("清空表数据")
-
-
+    print(paste0("表t_order_orders_items同步结束，结束时间：", format(Sys.time(), tz = "Asia/Shanghai")))
 
 
+  }
 
 
   return(res)
